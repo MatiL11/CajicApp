@@ -9,7 +9,7 @@ const CategoryList = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Categories</Text>
+      <Text style={styles.title}>Categorias</Text>
       <ScrollView 
         horizontal
         showsHorizontalScrollIndicator={false}
