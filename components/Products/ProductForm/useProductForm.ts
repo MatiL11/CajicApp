@@ -30,16 +30,22 @@ const categories = [
   { id: '1', name: 'Electrónicos', icon: 'devices' },
   { id: '2', name: 'Ropa', icon: 'checkroom' },
   { id: '3', name: 'Hogar', icon: 'home' },
+  { id: '4', name: 'Alimentos', icon: 'fastfood' },
+  { id: '5', name: 'Cocina', icon: 'restaurant' },
+  { id: '6', name: 'Mascotas', icon: 'pets' },
 ];
 
 // Hook personalizado para el formulario de producto
-export const useProductForm = (onSubmit: (productData: ProductData) => void): UseProductFormResult => {
-  const [name, setName] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [price, setPrice] = useState<string>('');
-  const [category, setCategory] = useState<string>('');
-  const [image, setImage] = useState<any | null>(null);
-  const [uploading, setUploading] = useState<boolean>(false);
+export const useProductForm = (
+  onSubmit: (productData: ProductData) => void,
+  initialData?: ProductData
+) => {
+  const [name, setName] = useState(initialData?.name || '');
+  const [description, setDescription] = useState(initialData?.description || '');
+  const [price, setPrice] = useState(initialData?.price || '');
+  const [category, setCategory] = useState(initialData?.category || '');
+  const [image, setImage] = useState(initialData?.image || null);
+  const [uploading, setUploading] = useState(false);
 
   // Función para seleccionar una imagen desde la galería
   const handleSelectImage = async () => {

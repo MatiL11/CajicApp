@@ -1,7 +1,8 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigation/types';
-import { Linking } from 'react-native';
+import { Linking, Alert } from 'react-native';
+import { useState, useEffect } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../services/firebaseConfig';
 
 interface RouteParams {
   productId: string;
@@ -10,29 +11,64 @@ interface RouteParams {
   description: string;
   imageUrl: string;
   seller: string;
-  contactNumber: string;  
+  userId: string;
 }
 
-// Hook personalizado para obtener los detalles de un producto
 export const useProductDetail = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute();
   const params = route.params as RouteParams;
+  const [contactNumber, setContactNumber] = useState<string>('');
+
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      try {
+        // Primero obtenemos los detalles del producto para obtener el userId
+        const productDoc = await getDoc(doc(db, 'products', params.productId));
+        
+        if (productDoc.exists()) {
+          const productData = productDoc.data();
+          const userId = productData.userId;
+
+          // Ahora obtenemos los detalles del usuario/vendedor
+          if (userId) {
+            const userDoc = await getDoc(doc(db, 'users', userId));
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              setContactNumber(userData.contactNumber || '');
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error al obtener detalles del producto y vendedor:', error);
+      }
+    };
+
+    fetchProductDetails();
+  }, [params.productId]);
 
   const handleWhatsAppContact = () => {
-    // Si no hay número de WhatsApp, usamos un mensaje genérico
-    const baseUrl = params.contactNumber 
-      ? `https://wa.me/${params.contactNumber}`
-      : 'https://wa.me/';
-      
+    if (!contactNumber) {
+      Alert.alert(
+        "Error",
+        "No se encontró el número de contacto del vendedor",
+        [{ text: "OK" }]
+      );
+      return;
+    }
+
+    const cleanNumber = contactNumber.replace(/\D/g, '');
+    console.log('Número de contacto del vendedor:', cleanNumber);
     const message = `Me interesa el producto ${params.name}`;
     const encodedMessage = encodeURIComponent(message);
-    console.log(baseUrl);
+    const baseUrl = `https://wa.me/${cleanNumber}`;
+      
+    console.log('URL de WhatsApp generada:', `${baseUrl}?text=${encodedMessage}`);
     Linking.openURL(`${baseUrl}?text=${encodedMessage}`);
   };
 
   return {
     params,
-    handleWhatsAppContact
+    handleWhatsAppContact,
+    contactNumber
   };
 };

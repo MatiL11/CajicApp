@@ -1,6 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../navigation/types';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../../services/firebaseConfig';
 
 interface Product {
   id: string;
@@ -9,21 +11,34 @@ interface Product {
   imageUrl: string;
   seller: string;
   description: string;
+  userId?: string;
 }
 
-// Hook personalizado para manejar la navegación a la pantalla de detalles del producto
 export const useHandleProduct = (product: Product) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  // Función para manejar el evento de presionar un producto
-  const handleProductPress = () => {
+  const handleProductPress = async () => {
+    let contactNumber = '';
+    
+    if (product.userId) {
+      try {
+        const userDoc = await getDoc(doc(db, 'users', product.userId));
+        if (userDoc.exists()) {
+          contactNumber = userDoc.data().phoneNumber || '';
+        }
+      } catch (error) {
+        console.error('Error al obtener el número de contacto:', error);
+      }
+    }
+
     navigation.navigate('ProductDetail', {
       productId: product.id,
       name: product.name,
       price: product.price,
       imageUrl: product.imageUrl,
       seller: product.seller || 'Vendedor',
-      description: product.description || 'Sin descripción disponible'
+      description: product.description || 'Sin descripción disponible',
+      contactNumber: contactNumber
     });
   };
 

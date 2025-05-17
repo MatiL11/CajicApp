@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, ActivityIndicator, TextInput } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Header from '../../components/Common/Header/Header';
 import styles from './MyProductsScreenStyles';
@@ -19,14 +19,9 @@ const MyProductsScreen = () => {
     products, 
     loading, 
     handleBackPress, 
-    handleNavigateToAdd, 
-    editingProductId,
-    tempPrice,
-    setTempPrice,
-    handleEditPrice,
-    handleSavePrice,
-    handleDelete,
-    setEditingProductId
+    handleNavigateToAdd,
+    handleNavigateToEdit,
+    handleDelete
   } = useMyProductsScreen();
 
   const renderProduct = ({ item }: { item: Product }) => (
@@ -37,38 +32,13 @@ const MyProductsScreen = () => {
       />
       <View style={styles.productInfo}>
         <Text style={styles.productName}>{item.name}</Text>
-        {editingProductId === item.id ? (
-          <View style={styles.priceEditContainer}>
-            <TextInput
-              style={styles.priceInput}
-              value={tempPrice}
-              onChangeText={setTempPrice}
-              keyboardType="numeric"
-              placeholder="Nuevo precio"
-              autoFocus
-            />
-            <TouchableOpacity 
-              style={styles.saveButton}
-              onPress={() => handleSavePrice(item.id)}
-            >
-              <MaterialIcons name="check" size={24} color="#5F4DEE" />
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.cancelButton}
-              onPress={() => setEditingProductId(null)}
-            >
-              <MaterialIcons name="close" size={24} color="#FF4B4B" />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <Text style={styles.productPrice}>${item.price}</Text>
-        )}
+        <Text style={styles.productPrice}>${item.price}</Text>
         <Text style={styles.productCategory}>{item.category}</Text>
       </View>
       <View style={styles.actionButtons}>
         <TouchableOpacity 
           style={styles.editButton}
-          onPress={() => handleEditPrice(item)}
+          onPress={() => handleNavigateToEdit(item)}
         >
           <MaterialIcons name="edit" size={24} color="#5F4DEE" />
         </TouchableOpacity>

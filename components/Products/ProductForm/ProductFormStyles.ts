@@ -128,18 +128,21 @@ const styles = StyleSheet.create({
   },
   categoriesRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    paddingHorizontal: 10,
+    marginBottom: 20
   },
   categoryButton: {
-    flex: 1,
+    width: '30%',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 12,
-    marginHorizontal: 4,
+    marginBottom: 10,
     borderRadius: 8,
-    backgroundColor: '#F8F9FE',
     borderWidth: 1,
     borderColor: '#E0E0E0',
+    backgroundColor: '#FFF'
   },
   categoryButtonSelected: {
     backgroundColor: '#F0EEFF',

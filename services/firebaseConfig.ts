@@ -1,24 +1,22 @@
 // services/firebaseConfig.ts
 
-import { initializeApp } from '@firebase/app';
+import { initializeApp, getApps, getApp } from '@firebase/app';
 import { getAuth, updateProfile } from 'firebase/auth';
 import { getFirestore } from '@firebase/firestore';
 
-// Tu configuración de Firebase
 const firebaseConfig = {
-  apiKey: "Aqui van sus datos",
-  authDomain: "Aqui van sus datos",
-  databaseURL: "Aqui van sus datos",
-  projectId: "Aqui van sus datos",
-  storageBucket: "Aqui van sus datos",
-  messagingSenderId: "Aqui van sus datos",
-  appId: "Aqui van sus datos"
+  apiKey: "AQUI VAN TUS DATOS",
+  authDomain: "AQUI VAN TUS DATOS",
+  databaseURL: "AQUI VAN TUS DATOS",
+  projectId: "AQUI VAN TUS DATOS",
+  storageBucket: "AQUI VAN TUS DATOS",
+  messagingSenderId: "AQUI VAN TUS DATOS",
+  appId: "AQUI VAN TUS DATOS",
 };
 
-// Inicializa Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // persistencia temporal (solo mientras la app está abierta)
+// Inicializa Firebase solo si no hay una instancia existente
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+const auth = getAuth(app);
 const db = getFirestore(app);
-
 
 export { auth, updateProfile, db };

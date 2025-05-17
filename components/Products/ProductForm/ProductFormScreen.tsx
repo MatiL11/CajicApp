@@ -12,9 +12,16 @@ interface ProductFormScreenProps {
     category: string;
     image: any | null;
   }) => void;
+  initialData?: {
+    name: string;
+    description: string;
+    price: string;
+    category: string;
+    image: string | null;
+  };
 }
 
-const ProductFormScreen: React.FC<ProductFormScreenProps> = ({ onSubmit }) => {
+const ProductFormScreen: React.FC<ProductFormScreenProps> = ({ onSubmit, initialData }) => {
   const {
     name,
     description,
@@ -29,7 +36,7 @@ const ProductFormScreen: React.FC<ProductFormScreenProps> = ({ onSubmit }) => {
     handleSelectImage,
     handleSubmit,
     categories
-  } = useProductForm(onSubmit);
+  } = useProductForm(onSubmit, initialData); 
 
   return (
     <ScrollView style={styles.container}>

@@ -24,6 +24,18 @@ export const useCategoryList = () => {
     {
       name: 'Hogar',
       icon: 'home'
+    },
+    {
+      name: 'Alimentos',
+      icon: 'fastfood'
+    },
+    {
+      name: 'Cocina',
+      icon: 'restaurant'
+    },
+    {
+      name: 'Mascotas',
+      icon: 'pets'
     }
   ]);
 

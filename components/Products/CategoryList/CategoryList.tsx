@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { useCategoryList, Category } from './useCategoryList';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { useCategoryList } from './useCategoryList';
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import styles from './CategoryListStyles';
 
@@ -10,7 +10,11 @@ const CategoryList = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Categories</Text>
-      <View style={styles.categoriesContainer}>
+      <ScrollView 
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.categoriesContainer}
+      >
         {categories.map((item) => (
           <TouchableOpacity 
             key={item.name}
@@ -23,7 +27,7 @@ const CategoryList = () => {
             <Text style={styles.categoryName}>{item.name}</Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };

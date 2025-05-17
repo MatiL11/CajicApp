@@ -20,8 +20,6 @@ interface Product {
 export const useMyProductsScreen = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editingProductId, setEditingProductId] = useState<string | null>(null);
-  const [tempPrice, setTempPrice] = useState('');
   const { handleBackPress } = useHeader();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -50,36 +48,16 @@ export const useMyProductsScreen = () => {
   };
 
   useEffect(() => {
-    fetchMyProducts();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchMyProducts();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   // Función para manejar el botón de agregar producto
   const handleNavigateToAdd = () => {
     navigation.navigate('Add');
-  };
-
-  // Nueva función para actualizar el precio de un producto
-  const handleUpdatePrice = async (productId: string, newPrice: number) => {
-    try {
-      const productRef = doc(db, 'products', productId);
-      await updateDoc(productRef, {
-        price: newPrice
-      });
-      
-      // Actualizar la lista local de productos
-      setProducts(prevProducts =>
-        prevProducts.map(product =>
-          product.id === productId
-            ? { ...product, price: newPrice }
-            : product
-        )
-      );
-      Alert.alert('Éxito', 'Precio actualizado correctamente');
-    } catch (error) {
-      console.error('Error al actualizar el precio:', error);
-      Alert.alert('Error', 'No se pudo actualizar el precio');
-      throw error;
-    }
   };
 
   // Nueva función para eliminar un producto
@@ -99,26 +77,6 @@ export const useMyProductsScreen = () => {
     }
   };
 
-  // Función para manejar el botón de editar precio
-  const handleEditPrice = (product: Product) => {
-    setEditingProductId(product.id);
-    setTempPrice(product.price.toString());
-  };
-
-  // Función para manejar el botón de guardar precio
-  const handleSavePrice = async (productId: string) => {
-    const newPrice = parseFloat(tempPrice);
-    if (isNaN(newPrice) || newPrice <= 0) {
-      Alert.alert('Error', 'Por favor ingresa un precio válido');
-      return;
-    }
-    try {
-      await handleUpdatePrice(productId, newPrice);
-      setEditingProductId(null);
-    } catch (error) {
-      Alert.alert('Error', 'No se pudo actualizar el precio');
-    }
-  };
 
   // Función para manejar el botón de eliminar producto
   const handleDelete = (productId: string) => {
@@ -136,19 +94,25 @@ export const useMyProductsScreen = () => {
     );
   };
 
+  // Función para navegar a la pantalla de edición
+  const handleNavigateToEdit = (product: Product) => {
+    navigation.navigate('EditProduct', {
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      category: product.category,
+      imageUrl: product.imageUrl
+    });
+  };
+
   return {
     products,
     loading,
     handleBackPress,
     handleNavigateToAdd,
-    handleUpdatePrice,
-    handleDeleteProduct,
-    editingProductId,
-    tempPrice,
-    setTempPrice,
-    handleEditPrice,
-    handleSavePrice,
+    handleNavigateToEdit, // Agregamos la nueva función al return
     handleDelete,
-    setEditingProductId
+    // Removemos las funciones relacionadas con la edición in-situ
   };
 };

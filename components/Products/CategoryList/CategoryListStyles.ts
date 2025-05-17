@@ -1,53 +1,50 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
-const { width } = Dimensions.get('window');
-const itemWidth = (width - 96) / 3; // Ajustamos el ancho considerando el padding total
+const CATEGORY_WIDTH = 105;
 
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
-    marginVertical: 16,
-    paddingHorizontal: 16,
+    marginVertical: 10
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 16,
-    color: '#000',
+    marginBottom: 12,
+    marginLeft: 16
   },
   categoriesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 8
   },
   categoryItem: {
-    width: itemWidth,
+    width: CATEGORY_WIDTH,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    marginRight: 16,
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 12,
-    marginHorizontal: 8,
+    elevation: 2,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 4
   },
   iconContainer: {
-    width: itemWidth * 0.5,
-    height: itemWidth * 0.5,
-    borderRadius: (itemWidth * 0.5) / 2,
-    backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: 48,
+    height: 48,
+    backgroundColor: '#F5F3FF',
+    borderRadius: 12,
     marginBottom: 8,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   categoryName: {
     fontSize: 14,
-    color: '#000',
-    textAlign: 'center',
-  },
+    color: '#333333',
+    marginTop: 4,
+    textAlign: 'center'
+  }
 });
-
-export default styles;

@@ -51,12 +51,12 @@ const EditProfileScreen = () => {
         </TouchableOpacity>
 
         <View style={styles.formContainer}>
-          <Text style={styles.label}>Nombre de la Empresa</Text>
+          <Text style={styles.label}>Nombre</Text>
           <TextInput
             style={styles.input}
             value={enterpriseName}
             onChangeText={setEnterpriseName}
-            placeholder="Ingresa el nombre de tu empresa"
+            placeholder="Ingresa el nombre que deseas mostrar"
             editable={!isLoading}
           />
         </View>

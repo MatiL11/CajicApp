@@ -7,7 +7,9 @@ export type RootStackParamList = {
     Explore: undefined;
     Add: undefined;
     EditProfile: undefined;
-    MyProducts: undefined;
+    MyProducts: {
+      refresh: boolean;
+    },
     ProductDetail: {
       productId: string;
       name: string;
@@ -15,9 +17,18 @@ export type RootStackParamList = {
       imageUrl: string;
       seller: string;
       description: string;
+      contactNumber: string;
     };
     CategoryProducts: {
       categoryName: string;
+    };
+    EditProduct: {
+      productId: string;
+      name: string;
+      price: number;
+      description: string;
+      category: string;
+      imageUrl: string;
     };
   };
 

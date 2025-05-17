@@ -10,6 +10,7 @@ import EditProfileScreen from './screens/EditProfile/EditProfileScreen';
 import MyProductsScreen from './screens/MyProducts/MyProductsScreen';
 import ProductDetailScreen from './screens/ProductDetail/ProductDetailScreen';
 import CategoryProductsScreen from './screens/CategoryProducts/CategoryProductsScreen';
+import EditProductScreen from './screens/EditProduct/EditProductScreen';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ export default function App() {
         <Stack.Screen name="MyProducts" component={MyProductsScreen} />
         <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
         <Stack.Screen name="CategoryProducts" component={CategoryProductsScreen} />
+        <Stack.Screen name="EditProduct" component={EditProductScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
