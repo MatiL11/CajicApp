@@ -43,7 +43,12 @@ export const useProductForm = (
   const [name, setName] = useState(initialData?.name || '');
   const [description, setDescription] = useState(initialData?.description || '');
   const [price, setPrice] = useState(initialData?.price || '');
-  const [category, setCategory] = useState(initialData?.category || '');
+  const [category, setCategory] = useState(() => {
+    if (!initialData?.category) return '';
+    // Buscar el ID de la categoría basado en el nombre
+    const categoryFound = categories.find(cat => cat.name === initialData.category);
+    return categoryFound ? categoryFound.id : '';
+  });
   const [image, setImage] = useState(initialData?.image || null);
   const [uploading, setUploading] = useState(false);
 

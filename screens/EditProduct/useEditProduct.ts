@@ -22,7 +22,7 @@ export const useEditProduct = () => {
     name: params.name,
     description: params.description,
     price: params.price.toString(),
-    category: params.category,
+    category: params.category || '',
     image: params.imageUrl
   });
 
@@ -46,9 +46,15 @@ export const useEditProduct = () => {
         'Producto actualizado correctamente',
         [
           {
-            text: 'OK',
+            text: 'Ir a Mi Perfil',
             onPress: () => {
-              navigation.navigate('MyProducts', { refresh: true });
+              navigation.reset({
+                index: 1,
+                routes: [
+                  { name: 'Home' },
+                  { name: 'Profile' }
+                ],
+              });
             }
           }
         ]
