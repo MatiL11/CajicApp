@@ -11,7 +11,9 @@ const EditProfileScreen = () => {
   const { handleBackPress } = useHeader();
   const { 
     enterpriseName, 
-    setEnterpriseName, 
+    setEnterpriseName,
+    contactNumber,
+    setContactNumber,
     handleImagePick, 
     handleSave,
     isLoading 
@@ -57,6 +59,16 @@ const EditProfileScreen = () => {
             value={enterpriseName}
             onChangeText={setEnterpriseName}
             placeholder="Ingresa el nombre que deseas mostrar"
+            editable={!isLoading}
+          />
+
+          <Text style={styles.label}>Número de Contacto</Text>
+          <TextInput
+            style={styles.input}
+            value={contactNumber}
+            onChangeText={setContactNumber}
+            placeholder="Ingresa tu número de contacto"
+            keyboardType="phone-pad"
             editable={!isLoading}
           />
         </View>

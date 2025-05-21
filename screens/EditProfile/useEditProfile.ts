@@ -1,16 +1,64 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { auth, db, updateProfile } from '../../services/firebaseConfig';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 
 // Hook personalizado para editar el perfil del usuario
 export const useEditProfile = () => {
   const currentUser = auth.currentUser;
   const [enterpriseName, setEnterpriseName] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Cargar datos del usuario al montar el componente
+  // Cargar el nombre actual del usuario
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (!currentUser) return;
+
+      try {
+        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setEnterpriseName(userData.enterpriseName || '');
+          setContactNumber(userData.contactNumber || '');
+        }
+      } catch (error) {
+        console.error('Error al cargar datos del usuario:', error);
+      }
+    };
+
+    loadUserData();
+  }, [currentUser]);
+
+  // Función para guardar los cambios en el perfil
+  const handleSave = async () => {
+    if (!currentUser) return false;
+    if (!enterpriseName.trim()) {
+      alert('El nombre no puede estar vacío');
+      return false;
+    }
+
+    try {
+      setIsLoading(true);
+      
+      const userRef = doc(db, 'users', currentUser.uid);
+      await updateDoc(userRef, {
+        enterpriseName: enterpriseName.trim(),
+        contactNumber: contactNumber.trim()
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Error al actualizar perfil:', error);
+      alert('Error al actualizar el perfil');
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Función para subir la imagen al Storage
   const handleImagePick = async () => {
     try {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -63,32 +111,11 @@ export const useEditProfile = () => {
     }
   };
 
-  // Función para guardar los cambios en el perfil
-  const handleSave = async () => {
-    if (!currentUser) return;
-
-    try {
-      setIsLoading(true);
-      
-      // Solo actualizamos en Firestore, ya que enterpriseName es un campo personalizado
-      const userRef = doc(db, 'users', currentUser.uid);
-      await updateDoc(userRef, {
-        enterpriseName: enterpriseName,
-      });
-
-      return true;
-    } catch (error) {
-      console.error('Error al actualizar perfil:', error);
-      alert('Error al actualizar el perfil');
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return {
     enterpriseName,
     setEnterpriseName,
+    contactNumber,
+    setContactNumber,
     handleImagePick,
     handleSave,
     isLoading,
